@@ -15,7 +15,7 @@ export function ConfirmTripModal({
       <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Confirmar criação de viagem</h2>
-          <button onClick={() => setIsConfirmTripModalOpen(true)}>
+          <button onClick={() => setIsConfirmTripModalOpen(false)}>
             <X className="size-5 text-zinc-400" />
           </button>
         </div>
@@ -30,8 +30,6 @@ export function ConfirmTripModal({
           </span>{" "}
           preencha seus dados abaixo:
         </p>
-
-        <div className="flex flex-wrap gap-2"></div>
 
         <form onClick={createTrip} className="space-y-3">
           <div className="h-14 px-4 bg-zinc-950 border-zinc-800 rounded-lg flex items-center gap-2">
