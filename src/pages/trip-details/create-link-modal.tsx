@@ -21,8 +21,6 @@ export function CreateLinkModal({
     const title = data.get("title")?.toString()
     const url = data.get("url")?.toString()
 
-    console.log({ title, url })
-
     await api.post(`/trips/${tripId}/links`, {
       title,
       url,
