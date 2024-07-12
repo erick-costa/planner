@@ -1,31 +1,31 @@
-import { Calendar, Tag, X } from "lucide-react"
+import { Link2, Tag, X } from "lucide-react"
 import { Button } from "../../components/button"
-import { FormEvent } from "react"
 import { api } from "../../lib/axios"
+import { FormEvent } from "react"
 import { useParams } from "react-router-dom"
 
 interface CreateActivityModalProps {
-  setIsCreateActivityModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setIsCreateLinkModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function CreateActivityModal({
-  setIsCreateActivityModalOpen,
+export function CreateLinkModal({
+  setIsCreateLinkModalOpen,
 }: CreateActivityModalProps) {
   const { tripId } = useParams()
 
-  async function createActivity(event: FormEvent<HTMLFormElement>) {
+  async function createLink(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const data = new FormData(event.currentTarget)
 
     const title = data.get("title")?.toString()
-    const occurs_at = data.get("occurs_at")?.toString()
+    const url = data.get("url")?.toString()
 
-    console.log({ title, occurs_at })
+    console.log({ title, url })
 
-    await api.post(`/trips/${tripId}/activities`, {
+    await api.post(`/trips/${tripId}/links`, {
       title,
-      occurs_at,
+      url,
     })
 
     window.document.location.reload()
@@ -35,39 +35,38 @@ export function CreateActivityModal({
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
       <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Cadastrar atividade</h2>
-          <button onClick={() => setIsCreateActivityModalOpen(false)}>
+          <h2 className="text-lg font-semibold">Cadastrar link</h2>
+          <button onClick={() => setIsCreateLinkModalOpen(false)}>
             <X className="size-5 text-zinc-400" />
           </button>
         </div>
         <p className="text-sm text-zinc-400">
-          Todos convidados podem visualizar as atividades.
+          Todos convidados podem visualizar os links importantes.
         </p>
 
-        <form onSubmit={createActivity} className="space-y-3">
+        <form onSubmit={createLink} className="space-y-3">
           <div className="h-14 px-4 bg-zinc-950 border-zinc-800 rounded-lg flex items-center gap-2">
             <Tag className="text-zinc-400 size-5" />
             <input
               name="title"
-              placeholder="Qual a atividade?"
+              placeholder="Título do link"
               className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
             />
           </div>
 
           <div className="flex items-center gap-2">
             <div className="h-14 flex-1 px-4 bg-zinc-950 border-zinc-800 rounded-lg flex items-center gap-2">
-              <Calendar className="text-zinc-400 size-5" />
+              <Link2 className="text-zinc-400 size-5" />
               <input
-                type="datetime-local"
-                name="occurs_at"
-                placeholder="Data e horário da atividade"
+                name="url"
+                placeholder="URL"
                 className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
               />
             </div>
           </div>
 
           <Button type="submit" size="full">
-            Salvar atividade
+            Salvar link
           </Button>
         </form>
       </div>
