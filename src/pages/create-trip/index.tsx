@@ -19,10 +19,7 @@ export function CreateTripPage() {
   const [ownerEmail, setOwnerEmail] = useState("")
   const [eventDates, setEventDates] = useState<DateRange | undefined>()
 
-  const [emailsToInvite, setEmailsToInvite] = useState([
-    "erick@email.com",
-    "john@acme.com",
-  ])
+  const [emailsToInvite, setEmailsToInvite] = useState<string[]>([])
 
   function addNewEmailToInvite(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

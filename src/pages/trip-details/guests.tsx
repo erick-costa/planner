@@ -1,8 +1,9 @@
 import { CheckCircle2, CircleDashed, UserCog } from "lucide-react"
 import { Button } from "../../components/button"
 import { useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { api } from "../../lib/axios"
+import { InviteGuestsModal } from "../create-trip/invite-guests-modal"
 
 interface Participant {
   id: string
@@ -14,6 +15,43 @@ interface Participant {
 export function Guests() {
   const { tripId } = useParams()
   const [participants, setParticipants] = useState<Participant[]>([])
+  const [isGuestsModalOpen, setIsGuestsModalOpen] = useState(false)
+  const [emailsToInvite, setEmailsToInvite] = useState<string[]>([])
+
+  async function addNewEmailToInvite(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const data = new FormData(event.currentTarget)
+    const email = data.get("email")?.toString()
+
+    if (!email) {
+      return
+    }
+
+    if (emailsToInvite.includes(email)) {
+      return
+    }
+
+    setEmailsToInvite([...emailsToInvite, email])
+
+    event.currentTarget.reset()
+
+    setIsGuestsModalOpen(false)
+
+    await api.post(`/trips/${tripId}/invites`, {
+      email,
+    })
+
+    window.document.location.reload()
+  }
+
+  function removeEmailFromInvites(emailToRemove: string) {
+    const newEmailList = emailsToInvite.filter(
+      (email) => email !== emailToRemove
+    )
+
+    setEmailsToInvite(newEmailList)
+  }
 
   useEffect(() => {
     api
@@ -49,10 +87,23 @@ export function Guests() {
         })}
       </div>
 
-      <Button variant="secondary" size="full">
+      <Button
+        onClick={() => setIsGuestsModalOpen(true)}
+        variant="secondary"
+        size="full"
+      >
         <UserCog className="size-5" />
         Gerenciar convidados
       </Button>
+
+      {isGuestsModalOpen && (
+        <InviteGuestsModal
+          addNewEmailToInvite={addNewEmailToInvite}
+          emailsToInvite={emailsToInvite}
+          setIsGuestsModalOpen={setIsGuestsModalOpen}
+          removeEmailFromInvites={removeEmailFromInvites}
+        />
+      )}
     </div>
   )
 }
